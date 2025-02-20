@@ -39,7 +39,7 @@ connectWalletButton.addEventListener('click', async () => {
 
 async function checkNetwork (expectedChainId) {
   const network = await provider.getNetwork()
-  if (network.chainId !== expectedChainId) {
+  if (Number(network.chainId) !== Number(expectedChainId)) {
     throw new Error(`Please switch your wallet network. Expected chain ID ${expectedChainId}, but connected chain ID is ${network.chainId}.`)
   }
 }
