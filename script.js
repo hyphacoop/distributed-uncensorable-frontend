@@ -37,6 +37,13 @@ connectWalletButton.addEventListener('click', async () => {
   }
 })
 
+async function checkNetwork (expectedChainId) {
+  const network = await provider.getNetwork()
+  if (network.chainId !== expectedChainId) {
+    throw new Error(`Please switch your wallet network. Expected chain ID ${expectedChainId}, but connected chain ID is ${network.chainId}.`)
+  }
+}
+
 donateButton.addEventListener('click', async () => {
   const amountValue = parseFloat(amountInput.value)
   if (isNaN(amountValue) || amountValue <= 0) {
@@ -55,6 +62,9 @@ donateButton.addEventListener('click', async () => {
   }
 
   try {
+    // Check if the wallet is connected to the expected network
+    await checkNetwork(config.chainId)
+
     let tx
     if (config.isNative) {
       // For native coin donations (like ETH), send a transaction with value.
@@ -85,7 +95,7 @@ donateButton.addEventListener('click', async () => {
     }
   } catch (err) {
     console.error('Error during donation:', err)
-    statusDiv.innerHTML = `<p>Error during donation: ${err.message}</p>`
+    statusDiv.innerHTML = DOMPurify.sanitize(`<p>Error during donation: ${err.message}</p>`)
   }
 })
 
