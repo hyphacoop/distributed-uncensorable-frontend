@@ -63,7 +63,54 @@ async function addNetwork(chainId) {
   }
 }
 
+async function checkNetwork(expectedChainId) {
+  let network = await provider.getNetwork();
+
   if (Number(network.chainId) !== Number(expectedChainId)) {
+    try {
+      await window.ethereum.request({
+        method: "wallet_switchEthereumChain",
+        params: [{ chainId: `0x${expectedChainId.toString(16)}` }]
+      });
+    } catch (switchError) {
+      if (switchError.code === 4902) {
+        console.log("Network not found, attempting to add it...");
+        await addNetwork(expectedChainId);
+
+        // Wait for MetaMask to complete the network addition
+        await new Promise(resolve => setTimeout(resolve, 2000));
+
+        // Refresh provider **after adding the network**
+        provider = new ethers.BrowserProvider(window.ethereum);
+        signer = await provider.getSigner();
+      } else {
+        console.error("Error switching network:", switchError);
+        statusDiv.innerHTML = "<p>Error switching network. Please switch manually.</p>";
+        return false;
+      }
+    }
+
+    // Final verification after any change
+    await new Promise(resolve => setTimeout(resolve, 1000)); // delay to allow provider update
+    provider = new ethers.BrowserProvider(window.ethereum);
+    signer = await provider.getSigner();
+    network = await provider.getNetwork();
+
+    if (Number(network.chainId) !== Number(expectedChainId)) {
+      console.error("Network switch failed.");
+      statusDiv.innerHTML = "<p>Error confirming network switch. Please switch manually.</p>";
+      return false;
+    }
+  }
+
+  // Final network confirmation message
+  const networkName = networkConfigs[expectedChainId]?.chainName || `Chain ID ${expectedChainId}`;
+  console.log(`Switched network successfully to ${networkName}`);
+  statusDiv.innerHTML = `<p>Network switched successfully to <strong>${networkName}</strong>.</p>`;
+
+
+  return true;
+}
 
 async function disconnectWallet() {
   try {
