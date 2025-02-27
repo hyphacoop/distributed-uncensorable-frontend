@@ -16,32 +16,118 @@ window.addEventListener('load', () => {
 })
 
 connectWalletButton.addEventListener('click', async () => {
-  if (typeof window.ethereum !== 'undefined') {
-    try {
-      // Request account access from MetaMask
-      await window.ethereum.request({ method: 'eth_requestAccounts' })
-      // In ethers v6, use BrowserProvider
-      provider = new ethers.BrowserProvider(window.ethereum)
-      signer = await provider.getSigner()
-      userAddress = await signer.getAddress()
-      statusDiv.innerHTML = `<p>Wallet connected: ${userAddress}</p>`
-      donateButton.disabled = false
-      // Optionally change Donate button background to green after connection
-      donateButton.style.backgroundColor = '#28a745'
-    } catch (err) {
-      console.error('Error connecting wallet:', err)
-      statusDiv.innerHTML = '<p>Error connecting wallet.</p>'
+  if (connectWalletButton.innerText === 'Connect Wallet') {
+    if (typeof window.ethereum !== 'undefined') {
+      try {
+        // Request account access from MetaMask
+        await window.ethereum.request({ method: 'eth_requestAccounts' })
+        // In ethers v6, use BrowserProvider
+        provider = new ethers.BrowserProvider(window.ethereum)
+        signer = await provider.getSigner()
+        userAddress = await signer.getAddress()
+        statusDiv.innerHTML = `<p>Wallet connected: ${userAddress}</p>`
+        donateButton.disabled = false
+        // Optionally change Donate button background to green after connection
+        donateButton.style.backgroundColor = '#28a745'
+        connectWalletButton.innerText = 'Disconnect Wallet'
+      } catch (err) {
+        console.error('Error connecting wallet:', err)
+        statusDiv.innerHTML = '<p>Error connecting wallet.</p>'
+      }
+    } else {
+      statusDiv.innerHTML = '<p>No Ethereum provider found. Please install <a href="https://metamask.io/" target="_blank">MetaMask</a>!</p>'
     }
   } else {
-    statusDiv.innerHTML = '<p>No Ethereum provider found. Please install <a href="https://metamask.io/" target="_blank">MetaMask</a>!</p>'
+    disconnectWallet()
   }
 })
 
-async function checkNetwork (expectedChainId) {
-  const network = await provider.getNetwork()
+async function addNetwork(chainId) {
+  const networkDetails = networkConfigs[chainId];
+  
+  if (!networkDetails) {
+    console.error(`Network details not found for chainId: ${chainId}`);
+    statusDiv.innerHTML = `<p>Network details not available. Please add manually .</p>`;
+    return;
+  }
+
+  try {
+    await window.ethereum.request({
+      method: "wallet_addEthereumChain",
+      params: [networkDetails]
+    });
+    statusDiv.innerHTML = "<p>Network added successfully.</p>";
+  } catch (addError) {
+    console.error("Error adding network:", addError);
+    statusDiv.innerHTML = "<p>Error adding network. Please add it manually.</p>";
+  }
+}
+
+async function checkNetwork(expectedChainId) {
+  let network = await provider.getNetwork();
+
   if (Number(network.chainId) !== Number(expectedChainId)) {
-    throw new Error(`Please switch your wallet network. Expected chain ID ${expectedChainId}, but connected chain ID is ${network.chainId}. You can add the network via https://chainlist.org/`
-    )
+    try {
+      await window.ethereum.request({
+        method: "wallet_switchEthereumChain",
+        params: [{ chainId: `0x${expectedChainId.toString(16)}` }]
+      });
+    } catch (switchError) {
+      if (switchError.code === 4902) {
+        console.log("Network not found, attempting to add it...");
+        await addNetwork(expectedChainId);
+
+        // Wait for MetaMask to complete the network addition
+        await new Promise(resolve => setTimeout(resolve, 2000));
+
+        // Refresh provider **after adding the network**
+        provider = new ethers.BrowserProvider(window.ethereum);
+        signer = await provider.getSigner();
+      } else {
+        console.error("Error switching network:", switchError);
+        statusDiv.innerHTML = "<p>Error switching network. Please switch manually.</p>";
+        return false;
+      }
+    }
+
+    // Final verification after any change
+    await new Promise(resolve => setTimeout(resolve, 1000)); // delay to allow provider update
+    provider = new ethers.BrowserProvider(window.ethereum);
+    signer = await provider.getSigner();
+    network = await provider.getNetwork();
+
+    if (Number(network.chainId) !== Number(expectedChainId)) {
+      console.error("Network switch failed.");
+      statusDiv.innerHTML = "<p>Error confirming network switch. Please switch manually.</p>";
+      return false;
+    }
+  }
+
+  // Final network confirmation message
+  const networkName = networkConfigs[expectedChainId]?.chainName || `Chain ID ${expectedChainId}`;
+  console.log(`Switched network successfully to ${networkName}`);
+  statusDiv.innerHTML = `<p>Network switched successfully to <strong>${networkName}</strong>.</p>`;
+
+
+  return true;
+}
+
+async function disconnectWallet() {
+  try {
+    await window.ethereum.request({
+      method: 'eth_requestAccounts',
+      params: [{ eth_accounts: {} }]
+    })
+    provider = null
+    signer = null
+    userAddress = null
+    statusDiv.innerHTML = '<p>Wallet disconnected.</p>'
+    donateButton.disabled = true
+    donateButton.style.backgroundColor = ''
+    connectWalletButton.innerText = 'Connect Wallet'
+  } catch (err) {
+    console.error('Error disconnecting wallet:', err)
+    statusDiv.innerHTML = '<p>Error disconnecting wallet.</p>'
   }
 }
 
@@ -63,8 +149,11 @@ donateButton.addEventListener('click', async () => {
   }
 
   try {
-    // Check if the wallet is connected to the expected network
-    await checkNetwork(config.chainId)
+    // Ensure we successfully switch networks before sending the transaction
+    const networkReady = await checkNetwork(config.chainId)
+    if (!networkReady) {
+      return
+    }
 
     let tx
     if (config.isNative) {
