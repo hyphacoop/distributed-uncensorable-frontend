@@ -40,8 +40,23 @@ connectWalletButton.addEventListener('click', async () => {
 async function checkNetwork (expectedChainId) {
   const network = await provider.getNetwork()
   if (Number(network.chainId) !== Number(expectedChainId)) {
-    throw new Error(`Please switch your wallet network. Expected chain ID ${expectedChainId}, but connected chain ID is ${network.chainId}. You can add the network via https://chainlist.org/`
-    )
+
+async function disconnectWallet() {
+  try {
+    await window.ethereum.request({
+      method: 'eth_requestAccounts',
+      params: [{ eth_accounts: {} }]
+    })
+    provider = null
+    signer = null
+    userAddress = null
+    statusDiv.innerHTML = '<p>Wallet disconnected.</p>'
+    donateButton.disabled = true
+    donateButton.style.backgroundColor = ''
+    connectWalletButton.innerText = 'Connect Wallet'
+  } catch (err) {
+    console.error('Error disconnecting wallet:', err)
+    statusDiv.innerHTML = '<p>Error disconnecting wallet.</p>'
   }
 }
 
