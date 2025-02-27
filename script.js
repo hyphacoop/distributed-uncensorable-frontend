@@ -149,8 +149,11 @@ donateButton.addEventListener('click', async () => {
   }
 
   try {
-    // Check if the wallet is connected to the expected network
-    await checkNetwork(config.chainId)
+    // Ensure we successfully switch networks before sending the transaction
+    const networkReady = await checkNetwork(config.chainId)
+    if (!networkReady) {
+      return
+    }
 
     let tx
     if (config.isNative) {
