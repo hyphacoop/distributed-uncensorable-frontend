@@ -5,9 +5,9 @@ A static donation page that accepts donations in multiple cryptocurrencies acros
 This project is completely static. All scripts are unminified scripts loaded from [local files](./static/js/) (not CDNs) to prevent censorship and improve security.
 
 ## Get started
-1. [Fork](https://github.com/hyphacoop/distributed-uncensorable-frontend/fork) this repository
+1. **[Fork](https://github.com/hyphacoop/distributed-uncensorable-frontend/fork) this repository**
 
-2. Configure networks & tokens in [config.js](./config.js):
+2. **Configure networks & tokens in [config.js](./config.js):**
 
 Example:
 ```js
@@ -38,8 +38,8 @@ const donationConfigs = {
 
 You can easily get the information about chains from here: https://chainlist.org/
 
-3. Update the [frontend](./index.html) to fit your needs
+3. **Update the [frontend](./index.html) to fit your needs**
 
-4. Deploying with Distributed Press
+4. **Deploying with Distributed Press**
 - Distributed Press offers a decentralized publishing solution, ensuring your page remains accessible and resistant to censorship.
 Explore different deployment methods in the [docs.distributed.press](https://docs.distributed.press/deployment/).
