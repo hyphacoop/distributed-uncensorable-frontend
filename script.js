@@ -16,24 +16,29 @@ window.addEventListener('load', () => {
 })
 
 connectWalletButton.addEventListener('click', async () => {
-  if (typeof window.ethereum !== 'undefined') {
-    try {
-      // Request account access from MetaMask
-      await window.ethereum.request({ method: 'eth_requestAccounts' })
-      // In ethers v6, use BrowserProvider
-      provider = new ethers.BrowserProvider(window.ethereum)
-      signer = await provider.getSigner()
-      userAddress = await signer.getAddress()
-      statusDiv.innerHTML = `<p>Wallet connected: ${userAddress}</p>`
-      donateButton.disabled = false
-      // Optionally change Donate button background to green after connection
-      donateButton.style.backgroundColor = '#28a745'
-    } catch (err) {
-      console.error('Error connecting wallet:', err)
-      statusDiv.innerHTML = '<p>Error connecting wallet.</p>'
+  if (connectWalletButton.innerText === 'Connect Wallet') {
+    if (typeof window.ethereum !== 'undefined') {
+      try {
+        // Request account access from MetaMask
+        await window.ethereum.request({ method: 'eth_requestAccounts' })
+        // In ethers v6, use BrowserProvider
+        provider = new ethers.BrowserProvider(window.ethereum)
+        signer = await provider.getSigner()
+        userAddress = await signer.getAddress()
+        statusDiv.innerHTML = `<p>Wallet connected: ${userAddress}</p>`
+        donateButton.disabled = false
+        // Optionally change Donate button background to green after connection
+        donateButton.style.backgroundColor = '#28a745'
+        connectWalletButton.innerText = 'Disconnect Wallet'
+      } catch (err) {
+        console.error('Error connecting wallet:', err)
+        statusDiv.innerHTML = '<p>Error connecting wallet.</p>'
+      }
+    } else {
+      statusDiv.innerHTML = '<p>No Ethereum provider found. Please install <a href="https://chromewebstore.google.com/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn" target="_blank">MetaMask</a>!</p>'
     }
   } else {
-    statusDiv.innerHTML = '<p>No Ethereum provider found. Please install <a href="https://metamask.io/" target="_blank">MetaMask</a>!</p>'
+    disconnectWallet()
   }
 })
 
