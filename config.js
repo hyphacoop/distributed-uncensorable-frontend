@@ -48,3 +48,39 @@ const donationConfigs = {
     chainId: 42161
   }
 }
+
+const networkConfigs = {
+  1: {
+    chainId: "0x1",
+    chainName: "Ethereum Mainnet",
+    rpcUrls: ["https://mainnet.infura.io"],
+    nativeCurrency: {
+      name: "ETH",
+      symbol: "ETH",
+      decimals: 18
+    },
+    blockExplorerUrls: ["https://etherscan.io"]
+  },
+  10: {
+    chainId: "0xa",
+    chainName: "Optimism",
+    rpcUrls: ["https://mainnet.optimism.io"],
+    nativeCurrency: {
+      name: "ETH",
+      symbol: "ETH",
+      decimals: 18
+    },
+    blockExplorerUrls: ["https://optimistic.etherscan.io"]
+  },
+  42161: {
+    chainId: "0xa4b1",
+    chainName: "Arbitrum One",
+    rpcUrls: ["https://arb1.arbitrum.io/rpc"],
+    nativeCurrency: {
+      name: "ETH",
+      symbol: "ETH",
+      decimals: 18
+    },
+    blockExplorerUrls: ["https://arbiscan.io"]
+  }
+};
