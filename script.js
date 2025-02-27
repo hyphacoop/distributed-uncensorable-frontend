@@ -33,7 +33,7 @@ connectWalletButton.addEventListener('click', async () => {
       statusDiv.innerHTML = '<p>Error connecting wallet.</p>'
     }
   } else {
-    statusDiv.innerHTML = '<p>No Ethereum provider found. Please install <a href="https://chromewebstore.google.com/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn" target="_blank">MetaMask</a>!</p>'
+    statusDiv.innerHTML = '<p>No Ethereum provider found. Please install <a href="https://metamask.io/" target="_blank">MetaMask</a>!</p>'
   }
 })
 
