@@ -39,7 +39,7 @@ const donationConfigs = {
     explorer: 'https://optimistic.etherscan.io/tx/',
     chainId: 10
   },
-  ARBI: {
+  ARB: {
     donationWallet: '0xBFCe3465fBEBC928c922362CBCdC32bEF8BCbE41',
     tokenContract: '0x912ce59144191c1204e64559fe8253a0e49e6548',
     decimals: 18,
