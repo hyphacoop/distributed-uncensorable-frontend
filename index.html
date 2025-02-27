@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Donate to the Distributed Press with Cryptocurrency">
+  <link rel="icon" type="image/png" href="./static/favicon-96x96.png" sizes="96x96">
+  <link rel="icon" type="image/png" href="./static/favicon-32x32.png" sizes="32x32">
+  <title>Distributed Press Uncensorable Donation Page</title>
+  <style>
+    @import url('./static/styles.css');
+  </style>
+</head>
+<body>
+  <div id="container">
+    <header>
+      <h1>Donate to the Distributed Press with Cryptocurrency</h1>
+    </header>
+
+    <section id="donation-form">
+      <div>
+        <label for="amount">Donation Amount:</label>
+        <input type="number" id="amount" placeholder="Enter amount" step="any" min="0" />
+      </div>
+      <div>
+        <label for="currency">Currency:</label>
+        <select id="currency">
+          <option value="ETH">ETH</option>
+          <option value="USDT">USDT (Ethereum Mainnet)</option>
+          <option value="USDT_OP">USDT (Optimism)</option>
+          <option value="USDT_ARB">USDT (Arbitrum)</option>
+          <option value="OP">OP (Optimism)</option>
+          <option value="ARB">ARB (Arbitrum)</option>
+        </select>
+      </div>
+      <div>
+        <button id="connectWallet">Connect Wallet</button>
+        <button id="donateButton" disabled>Donate</button>
+      </div>
+    </section>
+
+    <section id="status"></section>
+
+    <section id="qrCode">
+      <div id="qrCodeContainer"></div>
+    </section>
+
+    <footer>
+        <div style="display: inline-block; text-align: center; margin-top: 20px; padding: 8px;">
+            <div>Powered by</div>
+            <a href="//distributed.press" target="_blank">
+              <img
+                alt="Distributed Press"
+                src="//distributed.press/img/logos/logo-distributedpress-grey.png"
+                style="width: 123px; height: auto; margin-top: 10px;"
+              />
+            </a>
+            <p>
+              <a href="//reader.distributed.press" target="_blank">Follow on ActivityPub</a> |
+              <a href="//docs.distributed.press" target="_blank">Learn More</a> |
+              <a href="//github.com/hyphacoop/distributed-uncensorable-frontend/" target="_blank">Fork on GitHub</a>
+            </p>
+          </div>
+    </footer>
+  </div>
+
+  <script src="./static/js/ethers.umd.min.js"></script>
+  <script src="./static/js/qrcode.min.js"></script>
+  <script src="./script.js" type="module"></script>
+  <script src="./config.js"></script>
+
+</body>
+</html>

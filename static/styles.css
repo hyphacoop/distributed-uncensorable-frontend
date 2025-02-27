@@ -1,0 +1,120 @@
+body {
+    background: #f9f9f9;
+    color: #333;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+#container {
+    max-width: 600px;
+    margin: 2rem auto;
+    background: #fff;
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+header,
+footer {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+header h1 {
+    margin: 0;
+    margin-bottom: 2rem;
+    font-family:'Times New Roman', Times, serif;
+    font-weight: 100;
+    font-size: 1.8rem;
+    color: #222;
+}
+
+#donation-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+#donation-form label {
+    font-weight: bold;
+}
+
+#donation-form input,
+#donation-form select {
+    padding: 0.369rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+#donation-form button {
+    padding: 0.500rem;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#donation-form button:disabled {
+    background: #aaa;
+    cursor: not-allowed;
+}
+
+#connectWallet {
+    background-color: #3b82f6;
+}
+
+#connectWallet:hover {
+    background-color: #2563eb;
+}
+
+#donateButton {
+    background-color: #22c55e;
+    margin-left: 5px;
+}
+
+#donateButton:hover {
+    background-color: #059669;
+}
+
+#status {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+    max-width: 100%;
+    overflow: auto;
+}
+#status p {
+    margin: 0.5rem 0;
+    padding: 0.5rem;
+    background: #eef;
+    border-radius: 4px;
+}
+#status a {
+    color: #60A5FA;
+    text-decoration: underline;
+}
+#status a:hover {
+    color: #60A5FA;
+    text-decoration: none;
+}
+
+#qrCode {
+    text-align: center;
+    margin-top: 2rem;
+}
+
+#qrCodeContainer {
+    display: inline-block;
+    margin: 0 auto;
+}
+
+footer a {
+    margin-top: 0.5rem;
+    color: #0070f3;
+    text-decoration: none;
+    font-size: small;
+}
