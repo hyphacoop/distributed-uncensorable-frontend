@@ -30,5 +30,21 @@ const donationConfigs = {
     isNative: false,
     explorer: 'https://arbiscan.io/tx/',
     chainId: 42161
+  },
+  OP: {
+    donationWallet: '0xBFCe3465fBEBC928c922362CBCdC32bEF8BCbE41',
+    tokenContract: '0x4200000000000000000000000000000000000042',
+    decimals: 18,
+    isNative: false,
+    explorer: 'https://optimistic.etherscan.io/tx/',
+    chainId: 10
+  },
+  ARBI: {
+    donationWallet: '0xBFCe3465fBEBC928c922362CBCdC32bEF8BCbE41',
+    tokenContract: '0x912ce59144191c1204e64559fe8253a0e49e6548',
+    decimals: 18,
+    isNative: false,
+    explorer: 'https://arbiscan.io/tx/',
+    chainId: 42161
   }
 }
