@@ -37,8 +37,27 @@ connectWalletButton.addEventListener('click', async () => {
   }
 })
 
-async function checkNetwork (expectedChainId) {
-  const network = await provider.getNetwork()
+async function addNetwork(chainId) {
+  const networkDetails = networkConfigs[chainId];
+  
+  if (!networkDetails) {
+    console.error(`Network details not found for chainId: ${chainId}`);
+    statusDiv.innerHTML = `<p>Network details not available. Please add manually .</p>`;
+    return;
+  }
+
+  try {
+    await window.ethereum.request({
+      method: "wallet_addEthereumChain",
+      params: [networkDetails]
+    });
+    statusDiv.innerHTML = "<p>Network added successfully.</p>";
+  } catch (addError) {
+    console.error("Error adding network:", addError);
+    statusDiv.innerHTML = "<p>Error adding network. Please add it manually.</p>";
+  }
+}
+
   if (Number(network.chainId) !== Number(expectedChainId)) {
 
 async function disconnectWallet() {
